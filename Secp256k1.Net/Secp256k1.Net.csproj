@@ -8,10 +8,10 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <Company>Hosho</Company>
     <Authors>Hosho</Authors>
-    <PackageTags>Secp256k1 libsecp256k1 ECDSA ethereum bitcoin</PackageTags>
+    <PackageTags>Secp256k1 libsecp256k1 Tangram ECDSA bitcoin Grin MimbleWimble</PackageTags>
     <Description>.NET wrapper for native secp256k1 library</Description>
-    <PackageProjectUrl>https://github.com/hosho/Secp256k1.Net</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/hosho/Secp256k1.Net/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/tangramproject/Secp256k1.Net</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/tangramproject/Secp256k1.Net/blob/master/LICENSE</PackageLicenseUrl>
     <NoWarn>1591,1573</NoWarn>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -24,10 +24,10 @@
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <PackageReference Include="SourceLink.Embed.AllSourceFiles" Version="2.8.3" PrivateAssets="all" />
+    <PackageReference Include="Secp256k1.ZKP" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Secp256k1.Native" Version="0.1.20" PrivateAssets="all" />
     <PackageReference Include="System.Memory" Version="4.5.1" />
   </ItemGroup>
 
