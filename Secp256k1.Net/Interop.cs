@@ -258,7 +258,8 @@ namespace Secp256k1Net
     /// <summary>
     /// Generate a Pedersen commitment.
     /// </summary>
-    /*  Returns 1: Commitment successfully created.
+    /*  
+    *   Returns 1: Commitment successfully created.
     *           0: Error.The blinding factor is larger than the group order
     * (probability for random 32 byte number< 2^-127) or results in the
     *             point at infinity. Retry with a different factor.
@@ -283,7 +284,8 @@ namespace Secp256k1Net
     /// <summary>
     /// Verify a tally of Pedersen commitments.
     /// </summary>
-    /*  Returns 1: commitments successfully sum to zero.
+    /*  
+    *   Returns 1: commitments successfully sum to zero.
     *           0: Commitments do not sum to zero or other error.
     *   In:     ctx:    pointer to a context object (cannot be NULL)
     *   pos:    pointer to array of pointers to the commitments. (cannot be NULL if `n_pos` is non-zero)
@@ -300,9 +302,9 @@ namespace Secp256k1Net
     */
     [SymbolName(nameof(secp256k1_pedersen_verify_tally))]
     public unsafe delegate int secp256k1_pedersen_verify_tally(IntPtr ctx,
-        IntPtr pos,         // secp256k1_pedersen_commitment * const* pos
+        byte*[] pos,        // secp256k1_pedersen_commitment * const* pos
         uint n_pos,         // size_t
-        IntPtr neg,         // secp256k1_pedersen_commitment * const* neg
+        byte*[] neg,        // secp256k1_pedersen_commitment * const* neg
         uint n_neg          // size_t
     );
 
