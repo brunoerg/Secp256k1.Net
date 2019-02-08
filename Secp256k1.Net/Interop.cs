@@ -250,7 +250,7 @@ namespace Secp256k1Net
     [SymbolName(nameof(secp256k1_pedersen_blind_sum))]
     public unsafe delegate int secp256k1_pedersen_blind_sum(IntPtr ctx,
         void* blind_out,     // unsigned char* blind_out
-        IntPtr blinds,       // const unsigned char * const *blinds
+        byte*[] blinds,      // const unsigned char * const *blinds
         uint n,              // size_t
         uint npositive       // size_t
     );
