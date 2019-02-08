@@ -24,7 +24,7 @@
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <PackageReference Include="SourceLink.Embed.AllSourceFiles" Version="2.8.3" PrivateAssets="all" />
-    <PackageReference Include="Secp256k1.ZKP" Version="1.0.3" />
+    <PackageReference Include="Secp256k1.ZKP" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,4 +50,7 @@
   </ItemGroup>
   
   
+  <ItemGroup>
+    <Compile Remove="Constants.cs" />
+  </ItemGroup>
 </Project>
