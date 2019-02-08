@@ -226,6 +226,142 @@ namespace Secp256k1Net
         IntPtr data      // void *data
     );
 
+
+
+    [SymbolName(nameof(secp256k1_generator_generate))]
+    public unsafe delegate int secp256k1_generator_generate(IntPtr ctx,
+        void* gen,
+        void* seed32
+    );
+
+    /// <summary>
+    /// Computes the sum of multiple positive and negative blinding factors.
+    /// </summary>
+    /*  Returns 1: Sum successfully computed.
+    *           0: Error.A blinding factor is larger than the group order
+    * (probability for random 32 byte number< 2^-127). Retry with different factors.
+    *    
+    *   In:     ctx:        pointer to a context object (cannot be NULL)
+    *   blinds:     pointer to pointers to 32-byte character arrays for blinding factors. (cannot be NULL)
+    *   n:          number of factors pointed to by blinds.
+    *   npositive:  how many of the input factors should be treated with a positive sign.
+    *   Out:    blind_out:  pointer to a 32-byte array for the sum(cannot be NULL)
+    */
+    [SymbolName(nameof(secp256k1_pedersen_blind_sum))]
+    public unsafe delegate int secp256k1_pedersen_blind_sum(IntPtr ctx,
+        void* blind_out,     // unsigned char* blind_out
+        IntPtr blinds,       // const unsigned char * const *blinds
+        uint n,              // size_t
+        uint npositive       // size_t
+    );
+
+    /// <summary>
+    /// Generate a Pedersen commitment.
+    /// </summary>
+    /*  Returns 1: Commitment successfully created.
+    *           0: Error.The blinding factor is larger than the group order
+    * (probability for random 32 byte number< 2^-127) or results in the
+    *             point at infinity. Retry with a different factor.
+    *   In:     ctx:        pointer to a context object (cannot be NULL)
+    *   blind:      pointer to a 32-byte blinding factor(cannot be NULL)
+    *   value:      unsigned 64-bit integer value to commit to.
+    *          value_gen:  value generator 'h'
+    *          blind_gen:  blinding factor generator 'g'
+    *   Out:    commit:     pointer to the commitment (cannot be NULL)
+    *
+    * Blinding factors can be generated and verified in the same way as secp256k1 private keys for ECDSA.
+    */
+    [SymbolName(nameof(secp256k1_pedersen_commit))]
+    public unsafe delegate int secp256k1_pedersen_commit(IntPtr ctx,
+        void* commit,       // secp256k1_pedersen_commitment *commit
+        void* blind,        // const unsigned char *blind
+        ulong value,        // value
+        void* value_gen,    // secp256k1_generator *value_gen
+        void* blind_gen     // secp256k1_generator *blind_gen
+    );
+
+    /// <summary>
+    /// Verify a tally of Pedersen commitments.
+    /// </summary>
+    /*  Returns 1: commitments successfully sum to zero.
+    *           0: Commitments do not sum to zero or other error.
+    *   In:     ctx:    pointer to a context object (cannot be NULL)
+    *   pos:    pointer to array of pointers to the commitments. (cannot be NULL if `n_pos` is non-zero)
+    *   n_pos:  number of commitments pointed to by `pos`.
+    *   neg:    pointer to array of pointers to the negative commitments. (cannot be NULL if `n_neg` is non-zero)
+    *   n_neg:  number of commitments pointed to by `neg`.
+    *
+    * This computes sum(pos[0..n_pos)) - sum(neg[0..n_neg)) == 0.
+    *
+    * A Pedersen commitment is xG + vA where G and A are generators for the secp256k1 group and x is a blinding factor,
+    * while v is the committed value.For a collection of commitments to sum to zero, for each distinct generator
+    * A all blinding factors and all values must sum to zero.
+    *
+    */
+    [SymbolName(nameof(secp256k1_pedersen_verify_tally))]
+    public unsafe delegate int secp256k1_pedersen_verify_tally(IntPtr ctx,
+        IntPtr pos,         // secp256k1_pedersen_commitment * const* pos
+        uint n_pos,         // size_t
+        IntPtr neg,         // secp256k1_pedersen_commitment * const* neg
+        uint n_neg          // size_t
+    );
+
+    /// <summary>
+    /// Serialize a commitment object into a serialized byte sequence.
+    /// </summary>
+    /*
+    *   Returns: 1 always.
+    *   Args:   ctx:        a secp256k1 context object.
+    *   Out:    output:     a pointer to a 33-byte byte array
+    *   In:     commit:     a pointer to a secp256k1_pedersen_commitment containing an
+    * initialized commitment
+    */
+    [SymbolName(nameof(secp256k1_pedersen_commitment_serialize))]
+    public unsafe delegate int secp256k1_pedersen_commitment_serialize(IntPtr ctx,
+        void* output,       // unsigned char *output
+        void* commit        // const secp256k1_pedersen_commitment* commit
+    );
+
+    /// <summary>
+    /// Parse a 33-byte commitment into a commitment object.
+    /// </summary>
+    /*
+    *   Returns: 1 if input contains a valid commitment.
+    *   Args: ctx:      a secp256k1 context object.
+    *   Out:  commit:   pointer to the output commitment object
+    *   In:   input:    pointer to a 33-byte serialized commitment key
+    */
+    [SymbolName(nameof(secp256k1_pedersen_commitment_parse))]
+    public unsafe delegate int secp256k1_pedersen_commitment_parse(IntPtr ctx,
+        void* commit,       // secp256k1_pedersen_commitment* commit
+        void* input         // const unsigned char *input
+    );
+
+    /// <summary>
+    /// Calculates the blinding factor x' = x + SHA256(xG+vH | xJ), used in the switch commitment x'G+vH.
+    /// </summary>
+    /*
+    *   Returns 1: Blinding factor successfully computed.
+    *           0: Error.Retry with different values.
+    *
+    *   Args:           ctx: pointer to a context object
+    *   Out:   blind_switch: blinding factor for the switch commitment
+    *   In:           blind: pointer to a 32-byte blinding factor
+    *   value: unsigned 64-bit integer value to commit to
+    *   value_gen: value generator 'h'
+    *   blind_gen: blinding factor generator 'g'
+    *   switch_pubkey: pointer to public key 'j'
+    */
+    [SymbolName(nameof(secp256k1_blind_switch))]
+    public unsafe delegate int secp256k1_blind_switch(IntPtr ctx,
+        void* blind_switch, // unsigned char* blind_switch
+        void* blind,        // const unsigned char* blind
+        ulong value,        // uint64_t
+        void* value_gen,    // const secp256k1_generator* value_gen
+        void* blind_gen,    // const secp256k1_generator* blind_gen
+        void* switch_pubkey // const secp256k1_pubkey* switch_pubkey
+    );
+
     // Flags copied from
     // https://github.com/bitcoin-core/secp256k1/blob/452d8e4d2a2f9f1b5be6b02e18f1ba102e5ca0b4/include/secp256k1.h#L157
 
