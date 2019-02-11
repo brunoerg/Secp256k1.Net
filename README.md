@@ -1,5 +1,8 @@
 # Secp256k1.Net
 
+
+> # Will be replacing this implementation in the future.. coming soon &trade;
+
 [![NuGet](https://img.shields.io/nuget/v/Secp256k1.Net.svg)](https://www.nuget.org/packages/Secp256k1.Net/)
 
 
